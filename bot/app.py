@@ -8,17 +8,16 @@ CORS(app)
 
 @app.route('/bot', methods=['POST'])
 def handle_data():
-      # Получаем данные из запроса в формате JSON
+    # Получаем данные из запроса в формате JSON
     request_data = request.json
     # Извлекаем переменную data из полученных данных
     input_text = request_data.get('data')
     # Обработка полученных данных
-    print(input_text)
-    answer = processing_questions(input_text)
+    print(f"Полученный вопрос: {input_text}")
+    answer = processing_questions(input_text.strip())
     # Возвращаем ответ
-    print(answer)
-    return jsonify({"answer":answer})
-    
+    print(f"Отправляемый ответ: {answer}")
+    return jsonify({"answer": answer})
 
 if __name__ == '__main__':
     app.run(debug=True)

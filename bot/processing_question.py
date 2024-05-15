@@ -31,7 +31,7 @@ def processing_questions(quest):
     if answer:
         print(f'Ответ на вопрос: {answer[0]}')
     else:
-        print('Ответ не найден.')
+        print('Ответ не найден. PY')
 
     # Закрытие соединения с базой данных
     cur.close()

@@ -3,8 +3,7 @@ import os
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import pymorphy3  # Изменил импорт на pymorphy3, pymorphy2 имеет устаревшие методы
-
+import pymorphy3
 # Загрузка ресурсов NLTK
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -13,7 +12,7 @@ nltk.download('stopwords')
 stop_words = set(stopwords.words('russian'))
 
 # Инициализация морфологического анализатора pymorphy3
-morph = pymorphy3.MorphAnalyzer()  # Изменили инициализацию на pymorphy3
+morph = pymorphy3.MorphAnalyzer()
 
 def preprocess_text(text):
     text = text.lower()  # Приводим текст к нижнему регистру
@@ -51,6 +50,7 @@ data = [{"name_of_block": row[0], "question": row[1], "answer": row[2]} for row 
 
 # Применяем предварительную обработку к каждой записи
 for item in data:
+    item["name_of_block"] = preprocess_text(item["name_of_block"])  # Обработка названия блока
     item["question"] = preprocess_text(item["question"])
     item["answer"] = preprocess_text(item["answer"])
 

@@ -1,5 +1,5 @@
 import psycopg2
-import config
+from chat_bot import config
 def processing_questions(quest):
     # Параметры подключения к базе данных
     conn = psycopg2.connect(

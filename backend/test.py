@@ -1,11 +1,7 @@
-import config
+from config import conn
 import psycopg2
 import os
 
-print(config.dbname)
-
-# Создание соединения с базой данных
-conn = config.conn
 # Создаем объект cursor для выполнения SQL-запросов
 cur = conn.cursor()
 

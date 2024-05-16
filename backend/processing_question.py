@@ -1,8 +1,6 @@
 import psycopg2
-import config
+from config import conn
 def processing_questions(quest):
-    # Параметры подключения к базе данных
-    conn = config.conn
 
     # Создаем курсор для выполнения операций с базой данных
     cur = conn.cursor()

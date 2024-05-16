@@ -1,9 +1,10 @@
 import psycopg2
-import os
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import pymorphy3
+
+import config
 # Загрузка ресурсов NLTK
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -24,13 +25,7 @@ def preprocess_text(text):
     return preprocessed_text
 
 # Устанавливаем соединение с базой данных Supabase
-conn = psycopg2.connect(
-        dbname='postgres', #имя базы данных
-        user='postgres.zzyahwklsrihlglqbsfd', # имя пользователя
-        password='xy9$G/Cy~b~)&+_', # пароль
-        host='aws-0-eu-central-1.pooler.supabase.com',  # хост
-        port='5432' # порт
-    )
+conn = config.conn
 
 # Создаем объект cursor для выполнения SQL-запросов
 cur = conn.cursor()

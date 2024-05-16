@@ -3,18 +3,9 @@ import psycopg2
 import os
 
 print(config.dbname)
-# Установка параметров подключения к базе данных Supabase
-conn_params = {
-    "database": os.environ.get(config.dbname),
-    "user": os.environ.get(config.user),
-    "password": os.environ.get(config.password),
-    "host": os.environ.get(config.host),
-    "port": os.environ.get(config.port)
-}
 
 # Создание соединения с базой данных
-conn = psycopg2.connect(**conn_params)
-
+conn = config.conn
 # Создаем объект cursor для выполнения SQL-запросов
 cur = conn.cursor()
 

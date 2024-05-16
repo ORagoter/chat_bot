@@ -3,7 +3,8 @@ import os
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import pymorphy2
+import pymorphy3  # Изменили импорт на pymorphy3
+from inspect import getfullargspec  # Импортируем нужную функцию из модуля inspect
 
 # Загрузка ресурсов NLTK
 nltk.download('punkt')
@@ -12,8 +13,8 @@ nltk.download('stopwords')
 # Загрузка русского списка стоп-слов
 stop_words = set(stopwords.words('russian'))
 
-# Инициализация морфологического анализатора
-morph = pymorphy2.MorphAnalyzer()
+# Инициализация морфологического анализатора pymorphy3
+morph = pymorphy3.MorphAnalyzer()  # Изменили инициализацию на pymorphy3
 
 def preprocess_text(text):
     text = text.lower()  # Приводим текст к нижнему регистру

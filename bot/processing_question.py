@@ -1,14 +1,6 @@
 import psycopg2
+from database.py import conn
 def processing_questions(quest):
-    # Параметры подключения к базе данных
-    conn = psycopg2.connect(
-        dbname='postgres', #имя базы данных
-        user='postgres.zzyahwklsrihlglqbsfd', # имя пользователя
-        password='xy9$G/Cy~b~)&+_', # пароль
-        host='aws-0-eu-central-1.pooler.supabase.com',  # хост
-        port='5432' # порт
-    )
-
     # Создаем курсор для выполнения операций с базой данных
     cur = conn.cursor()
 

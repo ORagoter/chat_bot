@@ -3,8 +3,7 @@ import os
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import pymorphy3  # Изменили импорт на pymorphy3
-from inspect import getfullargspec  # Импортируем нужную функцию из модуля inspect
+import pymorphy3  # Изменил импорт на pymorphy3, pymorphy2 имеет устаревшие методы
 
 # Загрузка ресурсов NLTK
 nltk.download('punkt')

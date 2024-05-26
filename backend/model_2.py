@@ -2,6 +2,9 @@ import torch
 import pickle
 from nltk.tokenize import word_tokenize
 import torch.nn as nn
+from config import conn
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Определение класса Attention для механизма внимания
 class Attention(nn.Module):
@@ -79,7 +82,7 @@ def text_to_sequence(text, word_index):
     return sequence
 
 # Пример входного текста
-input_text = "Ваш вопрос здесь"
+input_text = "Какие адаптивные технологии могут помочь в обучении?"
 
 # Предварительная обработка и преобразование текста
 preprocessed_text = preprocess_text(input_text)
@@ -120,4 +123,47 @@ def generate_response(model, input_tensor, max_length, word_index, index_word):
 # Генерация ответа
 max_length = 50  # Максимальная длина ответа
 response = generate_response(model, input_tensor, max_length, word_index, index_word)
+
+
+
+
+# Создание курсора для выполнения запросов
+cur = conn.cursor()
+# Выполнение запроса для извлечения ответов из таблицы processed_data
+cur.execute("SELECT answer FROM processed_data")
+# Получение всех результатов запроса
+rows = cur.fetchall()
+# Закрытие курсора и соединения с базой данных
+cur.close()
+conn.close()
+
+# Преобразование результатов в список ответов
+database_answers = [row[0] for row in rows]
+
+
+
+def calculate_similarity(text1, text2):
+    # Создание TF-IDF векторизатора
+    vectorizer = TfidfVectorizer()
+
+    # Преобразование текстов в TF-IDF векторы
+    tfidf_matrix = vectorizer.fit_transform([text1, text2])
+
+    # Вычисление косинусного сходства между векторами
+    similarity = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
+
+    return similarity[0][0]
+
+
+# Оценка сгенерированного ответа по сходству с ответами из базы данных
+best_similarity = 0
+best_answer = None
+for answer in database_answers:
+    similarity = calculate_similarity(response, answer)
+    if similarity > best_similarity:
+        best_similarity = similarity
+        best_answer = answer
+
+# Вывод наилучшего ответа
+print("Наиболее подходящий ответ:", best_answer)
 print("Ответ:", response)

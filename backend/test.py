@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 import nltk
 from nltk.tokenize import word_tokenize
 from collections import defaultdict
+import torch
+import torch.nn as nn
 
 
 
@@ -98,5 +100,42 @@ print(f"Размер обучающего набора данных: {len(train_
 print(f"Размер тестового набора данных: {len(test_questions)}")
 
 
-print(train_questions)
+
+
+
+
+
+# Определение параметров модели
+input_dim = len(word_index)
+output_dim = len(word_index)
+embedding_dim = 256
+hidden_dim = 512
+batch_size = 32
+
+# Определение архитектуры модели
+class Seq2Seq(nn.Module):
+    def __init__(self, input_dim, output_dim, embedding_dim, hidden_dim):
+        super(Seq2Seq, self).__init__()
+        self.embedding = nn.Embedding(input_dim, embedding_dim)
+        self.encoder_lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
+        self.decoder_lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, src, trg):
+        embedded_src = self.embedding(src)
+        encoder_outputs, (hidden, cell) = self.encoder_lstm(embedded_src)
+        
+        embedded_trg = self.embedding(trg)
+        decoder_outputs, _ = self.decoder_lstm(embedded_trg, (hidden, cell))
+        
+        output = self.fc(decoder_outputs)
+        return output
+
+# Создание экземпляра модели
+model = Seq2Seq(input_dim, output_dim, embedding_dim, hidden_dim)
+
+# Определение функции потерь и оптимизатора
+criterion = nn.CrossEntropyLoss(ignore_index=word_index['<PAD>'])
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
 

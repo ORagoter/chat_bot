@@ -208,17 +208,3 @@ with open(file_path, 'wb') as file:
     pickle.dump(data, file)
 
 print("Модель успешно сохранена в файл:", file_path)
-
-# Загрузка данных из файла
-with open(file_path, 'rb') as file:
-    loaded_data = pickle.load(file)
-
-# Создание модели и оптимизатора с загруженными параметрами
-loaded_model = model()  # Создание модели Seq2Seq
-loaded_optimizer = optim.Adam(loaded_model.parameters(), lr=0.001)  # Создание оптимизатора
-
-# Загрузка параметров модели и оптимизатора
-loaded_model.load_state_dict(loaded_data['model_state_dict'])
-loaded_optimizer.load_state_dict(loaded_data['optimizer_state_dict'])
-
-print("Модель успешно загружена из файла.")

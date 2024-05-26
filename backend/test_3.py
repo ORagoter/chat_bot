@@ -134,7 +134,7 @@ test_questions_tensor = [torch.tensor(seq) for seq in test_questions_seq]
 test_answers_tensor = [torch.tensor(seq) for seq in test_answers_seq]
 
 # Цикл обучения модели
-num_epochs = 10
+num_epochs = 40
 
 for epoch in range(num_epochs):
     model.train()

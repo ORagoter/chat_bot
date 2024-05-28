@@ -82,32 +82,39 @@ class Attention(nn.Module):
         attention_weights = torch.bmm(v, energy).squeeze(1)
         return torch.softmax(attention_weights, dim=1)
 
-# Определение класса Seq2Seq с использованием внимания
+# Определение класса Seq2Seq с использованием внимания и dropout
 class Seq2Seq(nn.Module):
-    def __init__(self, input_dim, output_dim, embedding_dim, hidden_dim):
+    def __init__(self, input_dim, output_dim, embedding_dim, hidden_dim, dropout_p = 0.5):
         super(Seq2Seq, self).__init__()
         self.embedding = nn.Embedding(input_dim, embedding_dim)
         self.encoder_lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
         self.decoder_lstm = nn.LSTM(embedding_dim + hidden_dim, hidden_dim, batch_first=True)
         self.attention = Attention(hidden_dim)
         self.fc = nn.Linear(hidden_dim * 2, output_dim)
-
+        self.dropout = nn.Dropout(dropout_p) # для создания dropout слоя
+        
     def forward(self, src, trg):
+        # Встраивание входной последовательности
         embedded_src = self.embedding(src)
+        # Кодирование входной последовательности с помощью LSTM
         encoder_outputs, (hidden, cell) = self.encoder_lstm(embedded_src)
 
         outputs = []
         for t in range(trg.size(1)):
+            # Встраивание выходной последовательности на текущем временном шаге
             embedded_trg = self.embedding(trg[:, t]).unsqueeze(1)
+            # Вычисление весов внимания
             attn_weights = self.attention(hidden[-1], encoder_outputs)
             attn_applied = torch.bmm(attn_weights.unsqueeze(1), encoder_outputs)
-
+            # Создание входа для декодера
             decoder_input = torch.cat((embedded_trg, attn_applied), 2)
+            # Декодирование
             output, (hidden, cell) = self.decoder_lstm(decoder_input, (hidden, cell))
-
+            # Полносвязный слой для получения конечного вывода
             output = self.fc(torch.cat((output, attn_applied), 2))
+            output = self.dropout(output)  # для применения dropout
             outputs.append(output.squeeze(1))
-
+        # Объединение всех выходов в одну тензорную последовательность
         outputs = torch.stack(outputs, dim=1)
         return outputs
 
@@ -116,16 +123,21 @@ def create_batch(data, batch_size):
     return [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
 
 # Загрузка модели из файла
-file_path = 'saved_model.pkl'
+file_path = 'saved_model_22.pkl'
 with open(file_path, 'rb') as file:
     model_data = pickle.load(file)
 
-# Извлечение параметров модели
-input_dim = model_data['input_dim']
-output_dim = model_data['output_dim']
-embedding_dim = model_data['embedding_dim']
-hidden_dim = model_data['hidden_dim']
+
+
 word_index = model_data['word_index']
+# Гиперпараметры
+input_dim = len(word_index)
+output_dim = len(word_index)
+embedding_dim = 300
+hidden_dim = 256
+batch_size = 128
+
+
 
 # Создание и инициализация модели
 model = Seq2Seq(input_dim, output_dim, embedding_dim, hidden_dim)
@@ -172,8 +184,8 @@ test_questions_tensor = [torch.tensor(seq) for seq in test_questions_seq]
 test_answers_tensor = [torch.tensor(seq) for seq in test_answers_seq]
 
 # Цикл дообучения модели
-num_epochs = 20
-batch_size = 32
+num_epochs = 2
+batch_size = 128
 
 for epoch in range(num_epochs):
     model.train()

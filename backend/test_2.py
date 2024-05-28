@@ -6,6 +6,10 @@ from nltk.tokenize import word_tokenize
 from collections import defaultdict
 import os
 from config import conn  # Подключение к базе данных
+import pickle
+import torch.optim as optim
+
+
 
 # Функция предварительной обработки текста
 def preprocess_text(text):
@@ -182,12 +186,6 @@ def evaluate(model, test_questions, test_answers):
 test_loss = evaluate(model, test_questions_tensor, test_answers_tensor)
 print(f"Потери на тестовых данных: {test_loss}")
 
-import pickle
-
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import pickle
 
 # Пример обученной модели и оптимизатора
 model = model()  # Ваша обученная модель Seq2Seq

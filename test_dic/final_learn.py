@@ -140,33 +140,33 @@ def create_batch(data, batch_size):
 
 
 # Загрузка модели из файла
-#file_path = 'saved_model_22.pkl'
-#with open(file_path, 'rb') as file:
-#    model_data = pickle.load(file)
-#word_index = model_data['word_index']
+file_path = 'test_s_model.pkl'
+with open(file_path, 'rb') as file:
+    model_data = pickle.load(file)
+word_index = model_data['word_index']
 
 # Гиперпараметры (при стартовом обучении)
 input_dim = len(word_index)
 output_dim = len(word_index)
-embedding_dim = 300
-hidden_dim = 256
-batch_size = 128
+#embedding_dim = 256
+#hidden_dim = 64
+batch_size = 256
 
-#При дообучении 
-#embedding_dim = model_data['embedding_dim']
-#hidden_dim = model_data['hidden_dim']
+# При дообучении 
+embedding_dim = model_data['embedding_dim']
+hidden_dim = model_data['hidden_dim']
 
 
 
 # Создание и инициализация модели
 model = Seq2Seq(input_dim, output_dim, embedding_dim, hidden_dim)
 
-# model.load_state_dict(model_data['model_state_dict'])  # При дообучении
+model.load_state_dict(model_data['model_state_dict'])  # При дообучении
 
 # Настройка оптимизатора и функции потерь
 criterion = nn.CrossEntropyLoss(ignore_index=word_index['<PAD>'])
 optimizer = optim.Adam(model.parameters())
-# optimizer.load_state_dict(model_data['optimizer_state_dict'])  # При дообучении
+optimizer.load_state_dict(model_data['optimizer_state_dict'])  # При дообучении
 
 # Загрузка данных
 cur = conn.cursor()
@@ -204,8 +204,7 @@ test_questions_tensor = [torch.tensor(seq) for seq in test_questions_seq]
 test_answers_tensor = [torch.tensor(seq) for seq in test_answers_seq]
 
 # Цикл дообучения модели
-num_epochs = 10
-batch_size = 128
+num_epochs = 20
 
 for epoch in range(num_epochs):
     model.train()
@@ -235,7 +234,7 @@ def evaluate(model, test_questions, test_answers):
     model.eval()
     epoch_loss = 0
     with torch.no_grad():
-        for q_batch, a_batch in zip(create_batch(test_questions_tensor, batch_size), create_batch(test_answers_tensor, batch_size)):
+        for q_batch, a_batch in zip(create_batch(test_questions, batch_size), create_batch(test_answers, batch_size)):
             q_batch = rnn_utils.pad_sequence(q_batch, batch_first=True, padding_value=word_index['<PAD>'])
             a_batch = rnn_utils.pad_sequence(a_batch, batch_first=True, padding_value=word_index['<PAD>'])
 
@@ -265,9 +264,9 @@ model_data = {
     'hidden_dim': hidden_dim
 }
 
-file_path = 'second_model.pkl'
+file_path = 'test_s_model.pkl'
 
 with open(file_path, 'wb') as file:
-    pickle.dump(data, file)
+    pickle.dump(model_data, file)
 
 print("Модель успешно сохранена в файл:", file_path)

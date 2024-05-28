@@ -64,7 +64,7 @@ class Seq2Seq(nn.Module):
         return outputs
 
 # Загрузка сохраненной модели и оптимизатора
-file_path = 'test_model.pkl'
+file_path = 'test_s_model.pkl'
 with open(file_path, 'rb') as file:
     data = pickle.load(file)
 
@@ -94,7 +94,7 @@ def text_to_sequence(text, word_index):
     return sequence
 
 # Пример входного текста
-input_text = "какой метод оценка знание мочь наиболее подходящий"
+input_text = "мочь узнать потребность студент ограниченный возможность здоровье"
 preprocessed_text = preprocess_text(input_text)
 input_sequence = text_to_sequence(preprocessed_text, word_index)
 input_tensor = torch.tensor(input_sequence).unsqueeze(0)  # Добавляем размер батча

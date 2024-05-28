@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from answer_pricessing import get_answer
+from backend.answer_processing import get_answer
 
 app = Flask(__name__)
 CORS(app)

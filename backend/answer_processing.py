@@ -1,4 +1,4 @@
-from backend.start_model_processing import processing_questions
+from start_model_processing import processing_questions
 from config import conn
     
 def get_answer(question):

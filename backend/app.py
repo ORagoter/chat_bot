@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from processing_question import processing_questions
+from answer_pricessing import get_answer
 
 app = Flask(__name__)
 CORS(app)
@@ -14,7 +14,7 @@ def handle_data():
     input_text = request_data.get('data')
     # Обработка полученных данных
     print(f"Полученный вопрос: {input_text}")
-    answer = processing_questions(input_text.strip())
+    answer = get_answer(input_text.strip())
     # Возвращаем ответ
     print(f"Отправляемый ответ: {answer}")
     return jsonify({"answer": answer})

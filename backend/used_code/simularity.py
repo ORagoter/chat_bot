@@ -15,6 +15,6 @@ def calculate_similarity(text1, text2):
 
 # Пример использования функции
 text1 = "Привет мир"
-text2 = "Привет всем да"
+text2 = "Привет мир да"
 similarity_score = calculate_similarity(text1, text2)
 print("Косинусное сходство:", similarity_score)

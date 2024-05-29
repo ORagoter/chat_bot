@@ -1,15 +1,12 @@
 import torch
-import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
-from torch.nn.utils import rnn as rnn_utils
 import pickle
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from config import conn
 from model_seq import Seq2Seq
-from test_processing_answer import preprocess_text
+from processing_answer import preprocess_text
 # В данном файле происходит обработка вопроса с помощью сохранённой модели, функция processing_questions возвращает ответ
 
 
@@ -27,20 +24,20 @@ def processing_questions(input_text):
     response = generate_response(model, input_tensor, max_length, word_index, index_word)
     print("Ответ успешно сгенерирован: \n", response, end= "\n\n")
     
-    # Подключение к базе данных и извлечение ответов
+    # Подключение к базе данных и извлечение обработанных ответов
     cur = conn.cursor()
-    cur.execute("SELECT answer FROM processed_data")
+    cur.execute("SELECT answer_processed FROM answers;")
     rows = cur.fetchall()
     print("Успешное подключение к базе данных")
     
     # Преобразование результатов в список ответов
-    database_answers = [row[0] for row in rows]
+    database_processed_answers = [row[0] for row in rows]
 
     
     print('Оценка сгенерированного ответа по сходству с ответами из базы данных.')
     best_similarity = 0
     best_answer = None
-    for answer in database_answers:
+    for answer in database_processed_answers:
         similarity = calculate_similarity(response, answer)
         if similarity > best_similarity:
             best_similarity = similarity
@@ -52,7 +49,7 @@ def processing_questions(input_text):
 
 
 
-file_path = 'backend/models/main_model.pkl'
+file_path = 'backend/models/test_model.pkl'
 with open(file_path, 'rb') as file:
     data = pickle.load(file)
 

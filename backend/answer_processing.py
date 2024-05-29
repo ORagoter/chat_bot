@@ -8,18 +8,12 @@ def get_answer(question):
     # Создание объекта курсора для выполнения SQL-запросов
     cur = conn.cursor()
 
-    # SQL-запрос для получения id вопроса из таблицы processed_data по ответу
-    cur.execute("SELECT id FROM processed_data WHERE answer = %s", (answer,))
-    processed_data_id = cur.fetchone()[0]
-
-
-    print("ID Ответа:", processed_data_id)
-    # SQL-запрос для получения вопроса из таблицы question по id
-    cur.execute("SELECT answer FROM question WHERE id = %s", (processed_data_id,))
-    out_answer = cur.fetchone()[0]
-
-
+    # Выполнение SQL-запроса с использованием параметра
+    cur.execute("SELECT a.id_answer, a.answer FROM answers a WHERE a.answer_processed = %s;", (answer,))
+    row = cur.fetchone()
+    id_answer, original_answer = row
+    print("ID Ответа:", id_answer)
     # Вывод результата
-    print("Ответ из БД:", out_answer)
+    print("Ответ из БД:", original_answer)
     
-    return out_answer
+    return original_answer

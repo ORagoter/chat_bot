@@ -1,34 +1,33 @@
 # docker-compose.yml
-version: '26.1.1'
 
 services:
   backend:
     build:
-      context: ./chat_bot/backend
+      context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./chat_bot/backend:/app
+      - ./backend:/app
     ports:
-      - "8000:8000"
-    environment:
-      - ENV_VAR_NAME=VALUE
+      - "5000:5000"
     depends_on:
       - connection
 
   connection:
     build:
-      context: ./chat_bot/connection
+      context: ./connection
       dockerfile: Dockerfile
     volumes:
-      - ./chat_bot/connection:/app
+      - ./connection:/app
     ports:
       - "3000:3000"
+    depends_on:
+      - frontend
 
   frontend:
     build:
-      context: ./chat_bot/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./chat_bot/frontend:/usr/share/nginx/html
+      - ./frontend:/app
     ports:
       - "80:80"

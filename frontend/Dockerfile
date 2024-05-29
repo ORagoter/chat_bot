@@ -1,12 +1,8 @@
-# bot/frontend/Dockerfile
+# Use an official Nginx image
 FROM nginx:alpine
 
-# Удаляем стандартные файлы конфигурации NGINX и добавляем свои
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Копируем статические файлы в директорию сервера
+# Copy the frontend code into the container
 COPY . /usr/share/nginx/html
-
-# Открываем порт
-EXPOSE 80

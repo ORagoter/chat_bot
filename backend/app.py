@@ -4,8 +4,8 @@ from flask_cors import CORS
 from answer_processing import get_answer
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app, resources={r"/bot": {"origins": "*"}})
+     
 @app.route('/bot', methods=['POST'])
 def handle_data():
     # Получаем данные из запроса в формате JSON
@@ -20,5 +20,4 @@ def handle_data():
     return jsonify({"answer": answer})
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    
+    pass

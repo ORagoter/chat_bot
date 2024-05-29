@@ -1,33 +1,16 @@
-# docker-compose.yml
-
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
+    container_name: backend
     ports:
       - "5000:5000"
-    depends_on:
-      - connection
-
-  connection:
-    build:
-      context: ./connection
-      dockerfile: Dockerfile
-    volumes:
-      - ./connection:/app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - frontend
-
+  
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
+    container_name: frontend
     ports:
       - "80:80"
+    depends_on:
+      - backend

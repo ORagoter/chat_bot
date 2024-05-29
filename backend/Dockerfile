@@ -1,19 +1,22 @@
 # bot/backend/Dockerfile
-FROM python:3.12.2-slim
+FROM python:3.12.2
 
-# Установим рабочую директорию в контейнере
+
+
+# Создаем рабочую директорию
 WORKDIR /app
 
-# Скопируем все файлы из текущей директории в контейнер
-COPY . .
+# Copy the requirements file into the container
+COPY requirements.txt .
 
-# Установка переменной среды PATH для поиска pg_config
-ENV PATH="${PATH}:D:\PostgreSQL\bin"
-# Установим зависимости
+# Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Открываем порт
-EXPOSE 8000
+# Копируем код в контейнер
+COPY . .
 
-# Запуск приложения
-CMD ["python", "app.py"]
+# Указываем переменную среды для Flask
+ENV FLASK_APP=app.py
+
+# Запускаем приложение с помощью Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]

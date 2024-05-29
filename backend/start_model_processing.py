@@ -49,7 +49,7 @@ def processing_questions(input_text):
 
 
 
-file_path = 'backend/models/main_model.pkl'
+file_path = 'main_model.pkl'
 with open(file_path, 'rb') as file:
     data = pickle.load(file)
 

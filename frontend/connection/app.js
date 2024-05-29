@@ -35,7 +35,7 @@ inputForm.addEventListener('submit', function(event) {
 
 // Generate chatbot response function
 function generateResponse(input) {
-  return fetch('http://localhost:5000/bot', {
+  return fetch('http://backend:5000/bot', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

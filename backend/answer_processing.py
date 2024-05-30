@@ -14,6 +14,5 @@ def get_answer(question):
     id_answer, original_answer = row
     print("ID Ответа:", id_answer)
     # Вывод результата
-    print("Ответ из БД:", original_answer)
     
     return original_answer

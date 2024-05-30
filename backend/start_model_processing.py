@@ -12,7 +12,6 @@ from processing_answer import preprocess_text
 
 # обработка вопроса
 def processing_questions(input_text):
-    print("Полученный вопрос: ", input_text)
     preprocessed_text = preprocess_text(input_text)
     print("Обработанный вопрос:", preprocessed_text)
     input_sequence = text_to_sequence(preprocessed_text, word_index)

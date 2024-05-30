@@ -3,7 +3,7 @@ from config import conn
     
 def get_answer(question):
     # после получения ответа нужно найти его в БД, и вернуть ответ в исходном виде(не прошедший лемматизацию, обработку стоп слов и токенизацию)
-    answer = processing_questions(question)
+    answer,best_similarity  = processing_questions(question)
     print("\nОтвет, после косинусного сходства: ", answer)
     # Создание объекта курсора для выполнения SQL-запросов
     cur = conn.cursor()
@@ -15,4 +15,4 @@ def get_answer(question):
     print("ID Ответа:", id_answer)
     # Вывод результата
     
-    return original_answer
+    return original_answer, best_similarity

@@ -43,12 +43,12 @@ def processing_questions(input_text):
             best_answer = answer
     print("Косинусная точность: ", best_similarity)
     
-    return best_answer
+    return best_answer,best_similarity
 
 
 
 
-file_path = 'backend/models/test_model.pkl'
+file_path = 'backend/models/test_fast_model.pkl'
 with open(file_path, 'rb') as file:
     data = pickle.load(file)
 

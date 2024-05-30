@@ -14,7 +14,7 @@ def handle_data():
     input_text = request_data.get('data')
     # Обработка полученных данных
     print(f"Полученный вопрос: {input_text}")
-    answer = get_answer(input_text.strip())
+    answer, best_similarity = get_answer(input_text.strip())
     # Возвращаем ответ
     print(f"Отправляемый ответ: {answer}")
     return jsonify({"answer": answer})
